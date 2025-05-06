@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "id": "unstriplog",
+  "version": "${version}",
+  "name": "Unstrip Log Fabric",
+  "description": "",
+  "authors": [],
+  "contact": {},
+  "license": "MIT",
+  "icon": "assets/unstriplog/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "fabric-datagen": [
+      "com.chesy.unstriplog.client.UnstripLogDataGenerator"
+    ],
+    "client": [
+      "com.chesy.unstriplog.client.UnstripLogClient"
+    ],
+    "main": [
+      "com.chesy.unstriplog.UnstripLog"
+    ]
+  },
+  "mixins": [
+    "unstriplog.mixins.json",
+    {
+      "config": "unstriplog.client.mixins.json",
+      "environment": "client"
+    }
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric": "*",
+    "minecraft": "${minecraft_version}"
+  }
+}
