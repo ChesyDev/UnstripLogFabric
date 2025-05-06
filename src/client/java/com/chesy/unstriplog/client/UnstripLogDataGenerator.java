@@ -1,6 +1,7 @@
 package com.chesy.unstriplog.client;
 
 import com.chesy.unstriplog.datagen.ModItemTagProvider;
+import com.chesy.unstriplog.datagen.ModRecipeProvider;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 
@@ -10,5 +11,6 @@ public class UnstripLogDataGenerator implements DataGeneratorEntrypoint {
         FabricDataGenerator.Pack pack = fabricDataGenerator.createPack();
 
         pack.addProvider(ModItemTagProvider::new);
+        pack.addProvider(ModRecipeProvider::new);
     }
 }
