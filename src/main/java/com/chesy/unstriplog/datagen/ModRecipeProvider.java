@@ -39,15 +39,14 @@ public class ModRecipeProvider extends FabricRecipeProvider {
 
             @Override
             public void generate() {
-                ShapelessRecipeJsonBuilder.create(items, RecipeCategory.MISC, Items.PAPER, 1)
-                        .input(ModItems.BARK)
-                        .input(ModItems.BARK)
+                ShapedRecipeJsonBuilder.create(items, RecipeCategory.MISC, Items.PAPER, 1)
+                        .pattern("##")
+                        .input('#', ModItems.BARK)
                         .criterion(getHasName(ModItems.BARK), has(ModItems.BARK))
                         .offerTo(exporter);
             }
 
             private String getItemName(ItemConvertible item) {
-                if (item.asItem() == Items.SLIME_BALL) return "slimeball";
                 String name = item.asItem().getName().getString();
                 return name.substring(name.lastIndexOf('.') + 1);
             }

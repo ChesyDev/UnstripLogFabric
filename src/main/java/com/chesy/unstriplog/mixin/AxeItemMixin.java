@@ -39,7 +39,7 @@ public class AxeItemMixin {
                 ItemStack drop = new ItemStack(ModItems.BARK, 1);
 
                 ItemEntity droppedItem = new ItemEntity(world,
-                        pos.getX() + 0.5, pos.getY() + 1.0, pos.getZ() + 0.5,
+                        pos.getX(), pos.getY() + 1.0, pos.getZ(),
                         drop);
 
                 world.spawnEntity(droppedItem);
