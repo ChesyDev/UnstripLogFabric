@@ -5,9 +5,11 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemUsageContext;
+import net.minecraft.registry.Registries;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -18,13 +20,24 @@ public class BarkItem extends Item {
     private static final Map<Block, Block> REVERSE_STRIPPED = new HashMap<>();
 
     static {
-        REVERSE_STRIPPED.put(Blocks.STRIPPED_OAK_LOG, Blocks.OAK_LOG);
-        REVERSE_STRIPPED.put(Blocks.STRIPPED_SPRUCE_LOG, Blocks.SPRUCE_LOG);
-        REVERSE_STRIPPED.put(Blocks.STRIPPED_BIRCH_LOG, Blocks.BIRCH_LOG);
-        REVERSE_STRIPPED.put(Blocks.STRIPPED_JUNGLE_LOG, Blocks.JUNGLE_LOG);
-        REVERSE_STRIPPED.put(Blocks.STRIPPED_ACACIA_LOG, Blocks.ACACIA_LOG);
-        REVERSE_STRIPPED.put(Blocks.STRIPPED_DARK_OAK_LOG, Blocks.DARK_OAK_LOG);
-        // Add others if needed
+        buildReverseStrippedMap();
+    }
+
+    private static void buildReverseStrippedMap() {
+        for (Block block : Registries.BLOCK) {
+            Identifier id = Registries.BLOCK.getId(block);
+            String path = id.getPath(); // e.g. "stripped_oak_log"
+
+            if (path.startsWith("stripped_") && path.endsWith("_log")) {
+                String originalPath = path.substring("stripped_".length());
+                Identifier originalId = Identifier.of(id.getNamespace(), originalPath);
+
+                Block original = Registries.BLOCK.get(originalId);
+                if (original != null && original != Blocks.AIR) {
+                    REVERSE_STRIPPED.put(block, original);
+                }
+            }
+        }
     }
 
     public BarkItem(Settings settings) {

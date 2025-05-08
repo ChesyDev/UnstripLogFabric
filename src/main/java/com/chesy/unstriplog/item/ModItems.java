@@ -1,7 +1,7 @@
 package com.chesy.unstriplog.item;
 
 import com.chesy.unstriplog.UnstripLog;
-import net.fabricmc.fabric.api.registry.FuelRegistryEvents;
+import net.fabricmc.fabric.api.registry.FuelRegistry;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.registry.Registries;
@@ -12,14 +12,11 @@ import net.minecraft.util.Identifier;
 
 public class ModItems {
 
-    public static final Item BARK = register("bark", new BarkItem(new Item.Settings().registryKey(RegistryKey.of(RegistryKeys.ITEM, Identifier.of(UnstripLog.MOD_ID, "bark")))));
+    public static final Item BARK = register("bark", new BarkItem(new Item.Settings()));
 
 
     public static void registerFuels() {
-        FuelRegistryEvents.BUILD.register((builder, context) -> {
-            // builder.add(item, burnTimeTicks);
-            builder.add(BARK, 150);
-        });
+        FuelRegistry.INSTANCE.add(ModItems.BARK, 150);
     }
 
     public static <T extends Item> T register(String id, T item){

@@ -24,26 +24,20 @@ import java.util.Optional;
 
 @Mixin(AxeItem.class)
 public class AxeItemMixin {
-    @Inject(method = "useOnBlock", at = @At("HEAD"))
-    private void onUseOnBlock(ItemUsageContext context, CallbackInfoReturnable<ActionResult> cir) {}
+    @Inject(
+            method = "useOnBlock",
+            at = @At("RETURN")
+    )
+    private void injectUseOnBlock(ItemUsageContext context, CallbackInfoReturnable<ActionResult> cir) {
+        if (cir.getReturnValue() != ActionResult.SUCCESS) return;
 
-    @Inject(method = "useOnBlock", at = @At("RETURN"))
-    private void afterUseOnBlock(ItemUsageContext context, CallbackInfoReturnable<ActionResult> cir) {
-        ActionResult result = cir.getReturnValue();
+        World world = context.getWorld();
+        BlockPos pos = context.getBlockPos();
 
-        if (result == ActionResult.SUCCESS) {
-            World world = context.getWorld();
-            BlockPos pos = context.getBlockPos();
-
-            if (!world.isClient) {
-                ItemStack drop = new ItemStack(ModItems.BARK, 1);
-
-                ItemEntity droppedItem = new ItemEntity(world,
-                        pos.getX(), pos.getY() + 1.0, pos.getZ(),
-                        drop);
-
-                world.spawnEntity(droppedItem);
-            }
+        if (!world.isClient()) {
+            ItemStack bark = new ItemStack(ModItems.BARK);
+            ItemEntity itemEntity = new ItemEntity(world, pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, bark);
+            world.spawnEntity(itemEntity);
         }
     }
 }
