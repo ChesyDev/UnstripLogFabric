@@ -29,12 +29,14 @@ public class BarkItem extends Item {
             String path = id.getPath(); // e.g. "stripped_oak_log"
 
             if (path.startsWith("stripped_") && path.endsWith("_log") || path.endsWith("_wood")) {
-                String originalPath = path.substring("stripped_".length());
-                Identifier originalId = Identifier.of(id.getNamespace(), originalPath);
+                if (path.length() > "stripped_".length()) {
+                    String originalPath = path.substring("stripped_".length());
+                    Identifier originalId = Identifier.of(id.getNamespace(), originalPath);
 
-                Block original = Registries.BLOCK.get(originalId);
-                if (original != null && original != Blocks.AIR) {
-                    REVERSE_STRIPPED.put(block, original);
+                    Block original = Registries.BLOCK.get(originalId);
+                    if (original != null && original != Blocks.AIR) {
+                        REVERSE_STRIPPED.put(block, original);
+                    }
                 }
             }
         }
