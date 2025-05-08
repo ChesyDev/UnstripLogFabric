@@ -28,7 +28,7 @@ public class BarkItem extends Item {
             Identifier id = Registries.BLOCK.getId(block);
             String path = id.getPath(); // e.g. "stripped_oak_log"
 
-            if (path.startsWith("stripped_") && path.endsWith("_log")) {
+            if (path.startsWith("stripped_") && path.endsWith("_log") || path.endsWith("_wood")) {
                 String originalPath = path.substring("stripped_".length());
                 Identifier originalId = Identifier.of(id.getNamespace(), originalPath);
 
