@@ -24,9 +24,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(AxeItem.class)
 public class AxeItemMixin {
 
-    @Inject(method = "useOnBlock", at = @At("RETURN"))
+    @Inject(method = "useOnBlock", at = @At("RETURN"), cancellable = true)
     private void afterUseOnBlock(ItemUsageContext context, CallbackInfoReturnable<ActionResult> cir) {
-        if (cir.getReturnValue() != ActionResult.SUCCESS) return;
+        if (cir.getReturnValue() != ActionResult.SUCCESS) cir.setReturnValue(ActionResult.SUCCESS);
 
         World world = context.getWorld();
         BlockPos pos = context.getBlockPos();
