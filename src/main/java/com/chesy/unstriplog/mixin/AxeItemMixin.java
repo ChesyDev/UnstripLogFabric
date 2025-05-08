@@ -20,24 +20,21 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.util.Optional;
 
 @Mixin(AxeItem.class)
 public class AxeItemMixin {
-    @Inject(
-            method = "useOnBlock",
-            at = @At("RETURN")
-    )
-    private void injectUseOnBlock(ItemUsageContext context, CallbackInfoReturnable<ActionResult> cir) {
+
+    @Inject(method = "useOnBlock", at = @At("RETURN"))
+    private void afterUseOnBlock(ItemUsageContext context, CallbackInfoReturnable<ActionResult> cir) {
         if (cir.getReturnValue() != ActionResult.SUCCESS) return;
 
         World world = context.getWorld();
         BlockPos pos = context.getBlockPos();
 
-        if (!world.isClient()) {
-            ItemStack bark = new ItemStack(ModItems.BARK);
-            ItemEntity itemEntity = new ItemEntity(world, pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, bark);
-            world.spawnEntity(itemEntity);
-        }
+        if (world.isClient()) return;
+
+        ItemStack bark = new ItemStack(ModItems.BARK);
+        ItemEntity itemEntity = new ItemEntity(world, pos.getX(), pos.getY() + 1, pos.getZ(), bark);
+        world.spawnEntity(itemEntity);
     }
 }
