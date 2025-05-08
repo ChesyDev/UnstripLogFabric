@@ -3,9 +3,7 @@
   "minVersion": "0.8",
   "package": "com.chesy.unstriplog.mixin",
   "compatibilityLevel": "JAVA_21",
-  "mixins": [
-    "AxeItemMixin"
-  ],
+  "mixins": [],
   "injectors": {
     "defaultRequire": 1
   }
