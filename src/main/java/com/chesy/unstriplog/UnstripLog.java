@@ -32,8 +32,9 @@ public class UnstripLog implements ModInitializer {
             Identifier id = Registries.BLOCK.getId(block);
             String path = id.getPath();
 
-            if ((path.endsWith("_log") || path.endsWith("_wood")) || path.endsWith("stem") || path.endsWith("hyphae") && !path.startsWith("stripped_")) {
+            if ((path.endsWith("_log") || path.endsWith("_wood") || path.endsWith("stem") || path.endsWith("hyphae")) && !path.startsWith("stripped_")) {
                 LOGS.add(block);
+                System.out.println(path);
             }
         }
 
