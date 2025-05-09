@@ -3,6 +3,7 @@ package com.chesy.unstriplog.item;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.PillarBlock;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.registry.Registries;
@@ -11,6 +12,7 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 
 import java.util.HashMap;
@@ -55,7 +57,14 @@ public class BarkItem extends Item {
         Block reversed = REVERSE_STRIPPED.get(targetState.getBlock());
         if (reversed != null) {
             if (!world.isClient) {
-                world.setBlockState(pos, reversed.getDefaultState());
+                BlockState newState = reversed.getDefaultState();
+
+                if (newState.contains(PillarBlock.AXIS) && targetState.contains(PillarBlock.AXIS)) {
+                    Direction.Axis axis = targetState.get(PillarBlock.AXIS);
+                    newState = newState.with(PillarBlock.AXIS, axis);
+                }
+
+                world.setBlockState(pos, newState, 3);
                 world.playSound(null, pos, SoundEvents.ITEM_AXE_STRIP, SoundCategory.BLOCKS, 1.0F, 1.0F);
 
                 // Consume 1 bark item
