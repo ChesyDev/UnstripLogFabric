@@ -1,6 +1,6 @@
 # 🪵 UnstripLog
 
-**UnstripLog** is a lightweight Fabric mod for Minecraft 1.21.1+ that lets you reverse stripped logs back into regular logs using a custom item called **Bark**. Also adds a Bark-to-Paper crafting mechanic!
+**UnstripLog** is a lightweight Fabric mod for Minecraft 1.21.1+ that lets you reverse stripped logs back into regular logs using a custom item called **Bark**, also can be crafted into Paper.
 
 ---
 
@@ -10,7 +10,7 @@
 - ✅ Craft **Paper** from Bark
 - ✅ Bark is usable as **fuel**
 - ✅ Lightweight and easy to integrate
-- ✅ Supports mods with custom logs
+- ✅ Support mods with custom logs
 
 ---
 
