@@ -16,6 +16,6 @@
 
 ## 📥 Installation
 
-1. Download from [-]
+1. Download from [CurseForge](https://www.curseforge.com/minecraft/mc-mods/unstriplog)
 2. Drop the `.jar` into your Minecraft `mods/` folder
 3. Launch the game with Forge/Fabric
