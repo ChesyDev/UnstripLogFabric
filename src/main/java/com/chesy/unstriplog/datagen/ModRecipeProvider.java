@@ -41,7 +41,7 @@ public class ModRecipeProvider extends FabricRecipeProvider {
                         .pattern("##")
                         .input('#', ModItems.BARK)
                         .criterion(getHasName(ModItems.BARK), has(ModItems.BARK))
-                        .offerTo(exporter);
+                        .offerTo(exporter, "paper_from_bark");
             }
 
             private String getItemName(ItemConvertible item) {
