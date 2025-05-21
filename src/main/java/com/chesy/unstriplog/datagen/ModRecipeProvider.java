@@ -33,7 +33,7 @@ public class ModRecipeProvider extends FabricRecipeProvider {
                 .pattern("##")
                 .input('#', ModItems.BARK)
                 .criterion(getHasName(ModItems.BARK), has(ModItems.BARK))
-                .offerTo(recipeExporter);
+                .offerTo(recipeExporter, "paper_from_bark");
     }
 
     private String getItemName(ItemConvertible item) {
