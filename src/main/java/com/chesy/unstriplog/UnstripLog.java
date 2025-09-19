@@ -34,7 +34,7 @@ public class UnstripLog implements ModInitializer {
         }
 
         UseBlockCallback.EVENT.register((player, world, hand, hit) -> {
-            if (world.isClient) return ActionResult.PASS;
+            if (world.isClient()) return ActionResult.PASS;
 
             if (!(player.getStackInHand(hand).getItem() instanceof AxeItem)) {
                 return ActionResult.PASS;

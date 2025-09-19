@@ -57,7 +57,7 @@ public class BarkItem extends Item {
 
         Block reversed = REVERSE_STRIPPED.get(targetState.getBlock());
         if (reversed != null) {
-            if (!world.isClient) {
+            if (!world.isClient()) {
                 BlockState newState = reversed.getDefaultState();
 
                 if (newState.contains(PillarBlock.AXIS) && targetState.contains(PillarBlock.AXIS)) {
