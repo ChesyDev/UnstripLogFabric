@@ -9,6 +9,7 @@ import net.minecraft.entity.ItemEntity;
 import net.minecraft.item.AxeItem;
 import net.minecraft.item.ItemGroups;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.registry.Registries;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Identifier;
@@ -35,6 +36,10 @@ public class UnstripLog implements ModInitializer {
 
         UseBlockCallback.EVENT.register((player, world, hand, hit) -> {
             if (world.isClient()) return ActionResult.PASS;
+
+            if (player.getOffHandStack().getItem() == Items.SHIELD && !player.isSneaking()){
+                return ActionResult.PASS;
+            }
 
             if (!(player.getStackInHand(hand).getItem() instanceof AxeItem)) {
                 return ActionResult.PASS;
