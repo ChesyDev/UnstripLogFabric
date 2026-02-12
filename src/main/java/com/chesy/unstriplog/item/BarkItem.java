@@ -1,22 +1,21 @@
 package com.chesy.unstriplog.item;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.PillarBlock;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemUsageContext;
-import net.minecraft.registry.Registries;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.World;
-
 import java.util.HashMap;
 import java.util.Map;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.Identifier;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.RotatedPillarBlock;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class BarkItem extends Item {
     private static final Map<Block, Block> REVERSE_STRIPPED = new HashMap<>();
@@ -26,17 +25,17 @@ public class BarkItem extends Item {
     }
 
     private static void buildReverseStrippedMap() {
-        for (Block block : Registries.BLOCK) {
-            Identifier id = Registries.BLOCK.getId(block);
+        for (Block block : BuiltInRegistries.BLOCK) {
+            Identifier id = BuiltInRegistries.BLOCK.getKey(block);
             String path = id.getPath(); // e.g. "stripped_oak_log"
 
             if (path.startsWith("stripped_") && (path.endsWith("_log") || path.endsWith("_wood") || path.endsWith("stem") || path.endsWith("hyphae"))) {
                 // Make sure the length of the path is greater than "stripped_" to avoid substring error
                 if (path.length() > "stripped_".length()) {
                     String originalPath = path.substring("stripped_".length());
-                    Identifier originalId = Identifier.of(id.getNamespace(), originalPath);
+                    Identifier originalId = Identifier.fromNamespaceAndPath(id.getNamespace(), originalPath);
 
-                    Block original = Registries.BLOCK.get(originalId);
+                    Block original = BuiltInRegistries.BLOCK.getValue(originalId);
                     if (original != null && original != Blocks.AIR) {
                         REVERSE_STRIPPED.put(block, original);
                     }
@@ -45,36 +44,36 @@ public class BarkItem extends Item {
         }
     }
 
-    public BarkItem(Settings settings) {
+    public BarkItem(Properties settings) {
         super(settings);
     }
 
     @Override
-    public ActionResult useOnBlock(ItemUsageContext context) {
-        World world = context.getWorld();
-        BlockPos pos = context.getBlockPos();
+    public InteractionResult useOn(UseOnContext context) {
+        Level world = context.getLevel();
+        BlockPos pos = context.getClickedPos();
         BlockState targetState = world.getBlockState(pos);
 
         Block reversed = REVERSE_STRIPPED.get(targetState.getBlock());
         if (reversed != null) {
-            if (!world.isClient()) {
-                BlockState newState = reversed.getDefaultState();
+            if (!world.isClientSide()) {
+                BlockState newState = reversed.defaultBlockState();
 
-                if (newState.contains(PillarBlock.AXIS) && targetState.contains(PillarBlock.AXIS)) {
-                    Direction.Axis axis = targetState.get(PillarBlock.AXIS);
-                    newState = newState.with(PillarBlock.AXIS, axis);
+                if (newState.hasProperty(RotatedPillarBlock.AXIS) && targetState.hasProperty(RotatedPillarBlock.AXIS)) {
+                    Direction.Axis axis = targetState.getValue(RotatedPillarBlock.AXIS);
+                    newState = newState.setValue(RotatedPillarBlock.AXIS, axis);
                 }
 
-                world.setBlockState(pos, newState, 3);
-                world.playSound(null, pos, SoundEvents.ITEM_AXE_STRIP, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                world.setBlock(pos, newState, 3);
+                world.playSound(null, pos, SoundEvents.AXE_STRIP, SoundSource.BLOCKS, 1.0F, 1.0F);
 
                 // Consume 1 bark item
-                context.getStack().decrement(1);
+                context.getItemInHand().shrink(1);
             }
 
-            return ActionResult.SUCCESS;
+            return InteractionResult.SUCCESS;
         }
 
-        return ActionResult.PASS;
+        return InteractionResult.PASS;
     }
 }
