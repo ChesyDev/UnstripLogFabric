@@ -87,7 +87,7 @@ publishing {
 }
 
 publishMods {
-    file.set(jar.archiveFile)
+    file.set(remapJar.archiveFile)
     type = STABLE
     modLoaders.add("fabric")
     changelog = file("changelog.md").text
