@@ -20,6 +20,7 @@
       "com.chesy.unstriplog.UnstripLog"
     ]
   },
+  "accessWidener": "unstriplog.classtweaker",
   "mixins": [
     "unstriplog.mixins.json"
   ],
