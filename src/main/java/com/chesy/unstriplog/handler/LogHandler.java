@@ -44,6 +44,7 @@ public class LogHandler {
             }
         });
         LOGS.forEach(block -> {
+            if(!block.builtInRegistryHolder().key().location().getNamespace().equals("minecraft")) return;
             String name = block.builtInRegistryHolder().key().location().getPath().replace("_wood", "").replace("_log", "").replace("_block", "").replace("_stem", "").replace("_hyphae", "");
             BARK_TYPE.put(block, name);
         });

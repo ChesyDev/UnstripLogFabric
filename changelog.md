@@ -1,3 +1,6 @@
+### 1.1.2
+- Only allow vanilla log/wood to register default bark type
+
 ### 1.1.1
 - Hotfix of item model and crashing on starting game
 
