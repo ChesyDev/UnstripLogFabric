@@ -1,80 +1,21 @@
 package com.chesy.unstriplog.item;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.PillarBlock;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemUsageContext;
-import net.minecraft.registry.Registries;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.World;
-
-import java.util.HashMap;
-import java.util.Map;
+import com.chesy.unstriplog.component.ModDataComponents;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 
 public class BarkItem extends Item {
-    private static final Map<Block, Block> REVERSE_STRIPPED = new HashMap<>();
 
-    static {
-        buildReverseStrippedMap();
-    }
-
-    private static void buildReverseStrippedMap() {
-        for (Block block : Registries.BLOCK) {
-            Identifier id = Registries.BLOCK.getId(block);
-            String path = id.getPath(); // e.g. "stripped_oak_log"
-
-            if (path.startsWith("stripped_") && (path.endsWith("_log") || path.endsWith("_wood") || path.endsWith("stem") || path.endsWith("hyphae"))) {
-                // Make sure the length of the path is greater than "stripped_" to avoid substring error
-                if (path.length() > "stripped_".length()) {
-                    String originalPath = path.substring("stripped_".length());
-                    Identifier originalId = Identifier.of(id.getNamespace(), originalPath);
-
-                    Block original = Registries.BLOCK.get(originalId);
-                    if (original != null && original != Blocks.AIR) {
-                        REVERSE_STRIPPED.put(block, original);
-                    }
-                }
-            }
-        }
-    }
-
-    public BarkItem(Settings settings) {
+    public BarkItem(Properties settings) {
         super(settings);
     }
 
     @Override
-    public ActionResult useOnBlock(ItemUsageContext context) {
-        World world = context.getWorld();
-        BlockPos pos = context.getBlockPos();
-        BlockState targetState = world.getBlockState(pos);
-
-        Block reversed = REVERSE_STRIPPED.get(targetState.getBlock());
-        if (reversed != null) {
-            if (!world.isClient()) {
-                BlockState newState = reversed.getDefaultState();
-
-                if (newState.contains(PillarBlock.AXIS) && targetState.contains(PillarBlock.AXIS)) {
-                    Direction.Axis axis = targetState.get(PillarBlock.AXIS);
-                    newState = newState.with(PillarBlock.AXIS, axis);
-                }
-
-                world.setBlockState(pos, newState, 3);
-                world.playSound(null, pos, SoundEvents.ITEM_AXE_STRIP, SoundCategory.BLOCKS, 1.0F, 1.0F);
-
-                // Consume 1 bark item
-                context.getStack().decrement(1);
-            }
-
-            return ActionResult.SUCCESS;
+    public Component getName(ItemStack itemStack) {
+        if (itemStack.has(ModDataComponents.BARK_TYPE)){
+            return Component.translatable("item.unstriplog." + itemStack.get(ModDataComponents.BARK_TYPE).name() + "_bark");
         }
-
-        return ActionResult.PASS;
+        return super.getName(itemStack);
     }
 }
