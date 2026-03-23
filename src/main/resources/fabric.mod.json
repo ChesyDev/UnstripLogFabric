@@ -22,6 +22,7 @@
   "mixins": [
     "unstriplog.mixins.json"
   ],
+  "accessWidener": "unstriplog.classtweaker",
   "depends": {
     "fabricloader": ">=0.18.4",
     "minecraft": "~26.1-pre.1",
