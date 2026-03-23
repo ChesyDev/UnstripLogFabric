@@ -11,21 +11,17 @@
   "environment": "*",
   "entrypoints": {
     "fabric-datagen": [
-      "com.chesy.unstriplog.client.UnstripLogDataGenerator"
+      "com.chesy.unstriplog.datagen.UnstripLogDataGenerator"
     ],
     "client": [
-      "com.chesy.unstriplog.client.UnstripLogClient"
+      "com.chesy.unstriplog.UnstripLogClient"
     ],
     "main": [
       "com.chesy.unstriplog.UnstripLog"
     ]
   },
   "mixins": [
-    "unstriplog.mixins.json",
-    {
-      "config": "unstriplog.client.mixins.json",
-      "environment": "client"
-    }
+    "unstriplog.mixins.json"
   ],
   "depends": {
     "fabricloader": ">=${loader_version}",

@@ -1,7 +1,5 @@
-package com.chesy.unstriplog.client;
+package com.chesy.unstriplog.datagen;
 
-import com.chesy.unstriplog.datagen.ModItemTagProvider;
-import com.chesy.unstriplog.datagen.ModRecipeProvider;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 

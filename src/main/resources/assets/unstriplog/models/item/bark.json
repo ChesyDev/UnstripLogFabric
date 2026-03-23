@@ -1,6 +1,4 @@
 {
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "unstriplog:item/bark"
-  }
+  "parent": "minecraft:builtin/entity"
 }
+

@@ -2,14 +2,14 @@ package com.chesy.unstriplog.item;
 
 import com.chesy.unstriplog.UnstripLog;
 import net.fabricmc.fabric.api.registry.FuelRegistry;
-import net.minecraft.item.Item;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.util.Identifier;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
 
 public class ModItems {
 
-    public static final Item BARK = register("bark", new BarkItem(new Item.Settings()));
+    public static final Item BARK = register("bark", new BarkItem(new Item.Properties()));
 
 
     public static void registerFuels() {
@@ -17,8 +17,8 @@ public class ModItems {
     }
 
     public static <T extends Item> T register(String id, T item){
-        Identifier itemID = Identifier.of(UnstripLog.MOD_ID, id);
-        return Registry.register(Registries.ITEM, itemID, item); //returns Registered Item
+        ResourceLocation itemID = ResourceLocation.fromNamespaceAndPath(UnstripLog.MODID, id);
+        return Registry.register(BuiltInRegistries.ITEM, itemID, item); //returns Registered Item
     }
 
     public static void initialize() {
