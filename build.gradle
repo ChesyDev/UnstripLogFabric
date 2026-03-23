@@ -96,7 +96,7 @@ publishMods {
     curseforge {
         projectId = "1268448"
         accessToken = findProperty("CF_TOKEN")
-        minecraftVersions.add("26.1-snapshot")
+        minecraftVersions.add(minecraft_version)
     }
 
     modrinth {
