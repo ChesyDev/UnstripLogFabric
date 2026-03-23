@@ -11,7 +11,7 @@ import net.minecraft.world.item.Item;
 
 public class ModItems {
 
-    public static final Item BARK = register("bark", new BarkItem(new Item.Properties().setId(ResourceKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath(UnstripLog.MOD_ID, "bark")))));
+    public static final Item BARK = register("bark", new BarkItem(new Item.Properties().setId(ResourceKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath(UnstripLog.MODID, "bark")))));
 
 
     public static void registerFuels() {
@@ -22,7 +22,7 @@ public class ModItems {
     }
 
     public static <T extends Item> T register(String id, T item){
-        Identifier itemID = Identifier.fromNamespaceAndPath(UnstripLog.MOD_ID, id);
+        Identifier itemID = Identifier.fromNamespaceAndPath(UnstripLog.MODID, id);
         return Registry.register(BuiltInRegistries.ITEM, itemID, item); //returns Registered Item
     }
 

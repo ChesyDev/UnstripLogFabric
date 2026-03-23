@@ -1,71 +1,56 @@
 package com.chesy.unstriplog;
 
+import com.chesy.unstriplog.component.ModDataComponents;
+import com.chesy.unstriplog.config.RuntimeConfigAccess;
+import com.chesy.unstriplog.config.UnstripLogConfig;
+import com.chesy.unstriplog.handler.LogHandler;
 import com.chesy.unstriplog.item.ModItems;
+import com.chesy.unstriplog.network.ConfigSyncManager;
+import com.mojang.logging.LogUtils;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.creativetab.v1.CreativeModeTabEvents;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.fabricmc.fabric.api.creativetab.v1.FabricCreativeModeTabOutput;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.fabricmc.fabric.api.event.player.UseBlockCallback;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.minecraft.resources.Identifier;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.item.AxeItem;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.level.block.Block;
-import java.util.ArrayList;
-import java.util.List;
+import org.slf4j.Logger;
 
 public class UnstripLog implements ModInitializer {
-    public static String MOD_ID = "unstriplog";
+    public static final Logger LOGGER = LogUtils.getLogger();
+    public static String MODID = "unstriplog";
+    public static MinecraftServer SERVER;
 
     @Override
     public void onInitialize() {
-        List<Block> LOGS = new ArrayList<>();
-
-        for (Block block : BuiltInRegistries.BLOCK) {
-            Identifier id = BuiltInRegistries.BLOCK.getKey(block);
-            String path = id.getPath();
-
-            if ((path.endsWith("_log") || path.endsWith("_wood") || path.endsWith("stem") || path.endsWith("hyphae")) && !path.startsWith("stripped_")) {
-                LOGS.add(block);
-            }
-        }
-
-        UseBlockCallback.EVENT.register((player, world, hand, hit) -> {
-            if (world.isClientSide()) return InteractionResult.PASS;
-
-            if (player.getOffhandItem().getItem() == Items.SHIELD && !player.isShiftKeyDown()){
-                return InteractionResult.PASS;
-            }
-
-            if (!(player.getItemInHand(hand).getItem() instanceof AxeItem)) {
-                return InteractionResult.PASS;
-            }
-
-            BlockPos pos = hit.getBlockPos();
-            var state = world.getBlockState(pos);
-            var block = state.getBlock();
-
-            if (LOGS.contains(block)) {
-                ItemEntity drop = new ItemEntity(
-                        world,
-                        pos.getX() + 0.5,
-                        pos.getY() + 1.0,
-                        pos.getZ() + 0.5,
-                        new ItemStack(ModItems.BARK)
-                );
-                world.addFreshEntity(drop);
-            }
-
-            return InteractionResult.PASS;
-        });
-
-        CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.INGREDIENTS).register(content -> {
-            content.accept(ModItems.BARK);
-        });
-
         ModItems.initialize();
+        ModDataComponents.initialize();
+
+        ServerLifecycleEvents.SERVER_STARTED.register(server -> SERVER = server);
+        ServerLifecycleEvents.SERVER_STOPPED.register(server -> SERVER = null);
+        LogHandler.onCommonSetup();
+        CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.INGREDIENTS).register(this::addCreative);
+        ConfigSyncManager.onRegisterPayloadHandlers();
+        ServerPlayConnectionEvents.JOIN.register(ConfigSyncManager::onPlayerLogin);
+        ServerLifecycleEvents.SYNC_DATA_PACK_CONTENTS.register(ConfigSyncManager::onDatapackSync);
+        UnstripLogConfig.init();
+
+        UseBlockCallback.EVENT.register(LogHandler::onUnstrip);
+        UseBlockCallback.EVENT.register(LogHandler::onStrip);
+    }
+
+    private void addCreative(FabricCreativeModeTabOutput output) {
+        RuntimeConfigAccess.barkTypes().forEach(entry -> {
+            ItemStack stack = ModItems.BARK.getDefaultInstance();
+            stack.set(ModDataComponents.BARK_TYPE, entry);
+            output.accept(stack);
+        });
+    }
+
+    public static Identifier id(String path){
+        return Identifier.fromNamespaceAndPath(MODID, path);
     }
 }
