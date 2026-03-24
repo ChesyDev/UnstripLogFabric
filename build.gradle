@@ -1,5 +1,5 @@
 plugins {
-    id 'net.fabricmc.fabric-loom' version '1.14-SNAPSHOT'
+    id 'net.fabricmc.fabric-loom' version '1.15-SNAPSHOT'
     id 'maven-publish'
     id "me.modmuss50.mod-publish-plugin" version "1.1.0"
 }
@@ -109,7 +109,7 @@ publishMods {
     curseforge {
         projectId = "1268448"
         accessToken = findProperty("CF_TOKEN")
-        minecraftVersions.add("26.1-snapshot")
+        minecraftVersions.add(minecraft_version)
     }
 
     modrinth {
